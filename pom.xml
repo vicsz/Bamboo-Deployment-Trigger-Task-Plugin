@@ -14,8 +14,8 @@
         <url>http://www.example.com/</url>
     </organization>
 
-    <name>deploytask</name>
-    <description>This is the com.example.bamboo:deploytask plugin for Atlassian Bamboo.</description>
+    <name>Bamboo Deployment Trigger Task</name>
+    <description>Add a Task to allow Triggering of Deployments from Build Plans.</description>
     <packaging>atlassian-plugin</packaging>
 
     <properties>

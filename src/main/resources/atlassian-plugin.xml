@@ -20,5 +20,11 @@
 
         <context>deploytask</context>
     </web-resource>
+
+    <taskType key="deployTask" name="Trigger Deployment Task" class="com.example.DeployTask">
+        <description>A task that Triggers Bamboo Deployments.</description>
+        <configuration class="com.example.DeployTaskConfigurator"/>
+        <resource type="freemarker" name="edit" location="deploytask.ftl"/>
+    </taskType>
     
 </atlassian-plugin>
