@@ -41,7 +41,9 @@ public class DeployTask implements TaskType
 
             final String environmentName = taskContext.getConfigurationMap().get("environment");
 
-            DeploymentProject deploymentProject = getMatchingDeploymentProject("DeploymentProject");
+            final String deploymentProjectName = taskContext.getConfigurationMap().get("deploymentProject");
+
+            DeploymentProject deploymentProject = getMatchingDeploymentProject(deploymentProjectName);
 
             DeploymentVersion deploymentVersion = deploymentVersionService.getOrCreateDeploymentVersion(deploymentProject.getId(), taskContext.getBuildContext().getParentBuildContext().getPlanResultKey());
 
