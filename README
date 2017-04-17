@@ -15,3 +15,7 @@ https://developer.atlassian.com/docs/getting-started/set-up-the-atlassian-plugin
 2. Go to : localhost:6990/bamboo/
 3. Default login is admin/admin
 4. Plugin will be installed by default (in Bamboo).
+
+## TODO
+1. Add Validation of Deployment Project / and Environment Name -- (save as id, and not name)
+2. Wait on Deployment to finish for task to finish.

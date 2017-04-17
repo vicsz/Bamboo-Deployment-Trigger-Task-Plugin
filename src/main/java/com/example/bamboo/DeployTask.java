@@ -1,4 +1,4 @@
-package com.example;
+package com.example.bamboo;
 
 import com.atlassian.bamboo.build.logger.BuildLogger;
 import com.atlassian.bamboo.deployments.environments.Environment;
@@ -39,13 +39,13 @@ public class DeployTask implements TaskType
 
         try {
 
-            final String environmetName = taskContext.getConfigurationMap().get("environment");
+            final String environmentName = taskContext.getConfigurationMap().get("environment");
 
             DeploymentProject deploymentProject = getMatchingDeploymentProject("DeploymentProject");
 
             DeploymentVersion deploymentVersion = deploymentVersionService.getOrCreateDeploymentVersion(deploymentProject.getId(), taskContext.getBuildContext().getParentBuildContext().getPlanResultKey());
 
-            Environment environment = getMatchingEnvironment(deploymentProject, environmetName);
+            Environment environment = getMatchingEnvironment(deploymentProject, environmentName);
 
             deploymentExecutionService.prepareDeploymentContext(environment, deploymentVersion, taskContext.getBuildContext().getTriggerReason());
 

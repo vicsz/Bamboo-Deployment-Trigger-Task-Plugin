@@ -1,8 +1,10 @@
-package com.example;
+package com.example.bamboo;
 
 import com.atlassian.bamboo.collections.ActionParametersMap;
 import com.atlassian.bamboo.task.AbstractTaskConfigurator;
 import com.atlassian.bamboo.task.TaskDefinition;
+import com.atlassian.bamboo.utils.error.ErrorCollection;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Map;
 
@@ -24,5 +26,19 @@ public class DeployTaskConfigurator extends AbstractTaskConfigurator {
 
         context.put("environment", taskDefinition.getConfiguration().get("environment"));
         context.put("deploymentProject", taskDefinition.getConfiguration().get("deploymentProject"));
+    }
+
+    public void validate(final ActionParametersMap params, final ErrorCollection errorCollection)
+    {
+        super.validate(params, errorCollection);
+
+        final String environment = params.getString("environment");
+        final String deploymentProject = params.getString("deploymentProject");
+
+        if (StringUtils.isEmpty(environment))
+            errorCollection.addError("environment", "Environment can not be empty.");
+
+        if (StringUtils.isEmpty(deploymentProject))
+            errorCollection.addError("deploymentProject", "Deployment Project cannot be empty.");
     }
 }
