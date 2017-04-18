@@ -21,9 +21,9 @@
         <context>deploytask</context>
     </web-resource>
 
-    <taskType key="deployTask" name="Trigger Deployment Task" class="com.example.DeployTask">
+    <taskType key="deployTask" name="Trigger Deployment Task" class="com.example.bamboo.DeployTask">
         <description>A task that Triggers Bamboo Deployments.</description>
-        <configuration class="com.example.DeployTaskConfigurator"/>
+        <configuration class="com.example.bamboo.DeployTaskConfigurator"/>
         <resource type="freemarker" name="edit" location="deploytask.ftl"/>
     </taskType>
     
