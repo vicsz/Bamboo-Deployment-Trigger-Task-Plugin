@@ -19,3 +19,9 @@ https://developer.atlassian.com/docs/getting-started/set-up-the-atlassian-plugin
 ## TODO
 1. Add Validation of Deployment Project / and Environment Name -- (save as id, and not name)
 2. Wait on Deployment to finish for task to finish.
+
+## Issues
+
+Note broken backwards compatibility with Deployment Execution Service in version 5.9.
+
+https://jira.atlassian.com/browse/BAM-16289

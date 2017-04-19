@@ -26,5 +26,9 @@
         <configuration class="com.example.bamboo.DeployTaskConfigurator"/>
         <resource type="freemarker" name="edit" location="deploytask.ftl"/>
     </taskType>
+
+    <component-import key="deploymentVersionService" interface="com.atlassian.bamboo.deployments.versions.service.DeploymentVersionService" />
+    <component-import key="deploymentProjectService" interface="com.atlassian.bamboo.deployments.projects.service.DeploymentProjectService" />
+    <component-import key="deploymentExecutionService" interface="com.atlassian.bamboo.deployments.execution.service.DeploymentExecutionService" />
     
 </atlassian-plugin>

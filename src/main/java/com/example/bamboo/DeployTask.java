@@ -2,27 +2,24 @@ package com.example.bamboo;
 
 import com.atlassian.bamboo.build.logger.BuildLogger;
 import com.atlassian.bamboo.deployments.environments.Environment;
+import com.atlassian.bamboo.deployments.execution.DeploymentContext;
 import com.atlassian.bamboo.deployments.execution.service.DeploymentExecutionService;
 import com.atlassian.bamboo.deployments.projects.DeploymentProject;
 import com.atlassian.bamboo.deployments.projects.service.DeploymentProjectService;
 import com.atlassian.bamboo.deployments.versions.DeploymentVersion;
 import com.atlassian.bamboo.deployments.versions.service.DeploymentVersionService;
 import com.atlassian.bamboo.task.*;
-import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import java.util.List;
 
-@Scanned
+
 public class DeployTask implements TaskType
 {
-    @ComponentImport
     private final DeploymentVersionService deploymentVersionService;
 
-    @ComponentImport
+
     private final DeploymentProjectService deploymentProjectService;
 
-    @ComponentImport
     private final DeploymentExecutionService deploymentExecutionService;
 
     public DeployTask(DeploymentVersionService deploymentVersionService, DeploymentProjectService deploymentProjectService, DeploymentExecutionService deploymentExecutionService)
@@ -49,7 +46,7 @@ public class DeployTask implements TaskType
 
             Environment environment = getMatchingEnvironment(deploymentProject, environmentName);
 
-            deploymentExecutionService.prepareDeploymentContext(environment, deploymentVersion, taskContext.getBuildContext().getTriggerReason());
+            DeploymentContext deploymentContext = deploymentExecutionService.prepareDeploymentContext(environment, deploymentVersion, taskContext.getBuildContext().getTriggerReason());
 
             buildLogger.addBuildLogEntry(deploymentVersion.getName() + " deployment to " + environment + " triggered.");
 
