@@ -7,7 +7,6 @@ import com.atlassian.bamboo.deployments.projects.service.DeploymentProjectServic
 import com.atlassian.bamboo.task.AbstractTaskConfigurator;
 import com.atlassian.bamboo.task.TaskDefinition;
 import com.atlassian.bamboo.utils.error.ErrorCollection;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.Map;
 
 public class DeployTaskConfigurator extends AbstractTaskConfigurator {
 
-    @ComponentImport
     private final DeploymentProjectService deploymentProjectService;
 
     public DeployTaskConfigurator(DeploymentProjectService deploymentProjectService)
