@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example.bamboo</groupId>
     <artifactId>deploytask</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-
     <organization>
         <name>Example Company</name>
         <url>http://www.example.com/</url>
     </organization>
-
     <name>Bamboo Deployment Trigger Task</name>
     <description>Add a Task to allow Triggering of Deployments from Build Plans.</description>
     <packaging>atlassian-plugin</packaging>
-
     <properties>
         <bamboo.version>5.6.0</bamboo.version>
         <bamboo.data.version>5.6.0</bamboo.data.version>
-        <amps.version>5.0.4</amps.version>
+        <amps.version>5.1.18</amps.version>
         <plugin.testrunner.version>1.2.0</plugin.testrunner.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.atlassian.bamboo</groupId>
@@ -32,14 +25,12 @@
             <version>${bamboo.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
@@ -59,7 +50,6 @@
             <version>2.2.2-atlassian-1</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -72,7 +62,6 @@
                     <productDataVersion>${bamboo.data.version}</productDataVersion>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -82,5 +71,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

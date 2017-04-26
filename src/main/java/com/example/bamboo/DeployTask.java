@@ -8,7 +8,9 @@ import com.atlassian.bamboo.deployments.projects.DeploymentProject;
 import com.atlassian.bamboo.deployments.projects.service.DeploymentProjectService;
 import com.atlassian.bamboo.deployments.versions.DeploymentVersion;
 import com.atlassian.bamboo.deployments.versions.service.DeploymentVersionService;
+import com.atlassian.bamboo.spring.ComponentAccessor;
 import com.atlassian.bamboo.task.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -17,10 +19,11 @@ public class DeployTask implements TaskType
 {
     private final DeploymentVersionService deploymentVersionService;
 
-
     private final DeploymentProjectService deploymentProjectService;
 
     private final DeploymentExecutionService deploymentExecutionService;
+
+    private BuildLogger buildLogger;
 
     public DeployTask(DeploymentVersionService deploymentVersionService, DeploymentProjectService deploymentProjectService, DeploymentExecutionService deploymentExecutionService)
     {
@@ -29,10 +32,10 @@ public class DeployTask implements TaskType
         this.deploymentExecutionService = deploymentExecutionService;
     }
 
-    public TaskResult execute(final TaskContext taskContext) throws TaskException
+    public TaskResult execute(@NotNull final TaskContext taskContext) throws TaskException
     {
 
-        final BuildLogger buildLogger = taskContext.getBuildLogger();
+        buildLogger = taskContext.getBuildLogger();
 
         try {
 
@@ -47,6 +50,10 @@ public class DeployTask implements TaskType
             Environment environment = getMatchingEnvironment(deploymentProject, environmentName);
 
             DeploymentContext deploymentContext = deploymentExecutionService.prepareDeploymentContext(environment, deploymentVersion, taskContext.getBuildContext().getTriggerReason());
+
+            deploymentExecutionService.execute(deploymentContext);
+
+            waitForDeploymentToComplete(environment);
 
             buildLogger.addBuildLogEntry(deploymentVersion.getName() + " deployment to " + environment + " triggered.");
 
@@ -83,6 +90,18 @@ public class DeployTask implements TaskType
         }
 
         throw new RuntimeException("Unable to find environment: " + name);
+    }
+
+    private void waitForDeploymentToComplete(Environment environment) {
+
+        do {
+            try {
+                buildLogger.addBuildLogEntry("Deployment already in progress - delaying 5 seconds");
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                buildLogger.addErrorLogEntry("Waiting for deployment error: " + e.getMessage(), e);
+            }
+        } while(deploymentExecutionService.isEnvironmentBeingDeployedTo(environment.getId()));
     }
 
 }
