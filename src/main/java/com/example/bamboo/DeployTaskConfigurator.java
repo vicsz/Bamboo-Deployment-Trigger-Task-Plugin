@@ -25,8 +25,8 @@ public class DeployTaskConfigurator extends AbstractTaskConfigurator {
     {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
 
-        config.put("environment", params.getString("environment"));
         config.put("deploymentProject", params.getString("deploymentProject"));
+        config.put("environment", params.getString("environment"));
 
         return config;
     }
@@ -35,8 +35,8 @@ public class DeployTaskConfigurator extends AbstractTaskConfigurator {
     {
         super.populateContextForEdit(context, taskDefinition);
 
-        context.put("environment", taskDefinition.getConfiguration().get("environment"));
         context.put("deploymentProject", taskDefinition.getConfiguration().get("deploymentProject"));
+        context.put("environment", taskDefinition.getConfiguration().get("environment"));
     }
 
     public void validate(final ActionParametersMap params, final ErrorCollection errorCollection)

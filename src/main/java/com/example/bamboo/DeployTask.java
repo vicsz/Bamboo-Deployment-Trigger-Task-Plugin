@@ -8,7 +8,6 @@ import com.atlassian.bamboo.deployments.projects.DeploymentProject;
 import com.atlassian.bamboo.deployments.projects.service.DeploymentProjectService;
 import com.atlassian.bamboo.deployments.versions.DeploymentVersion;
 import com.atlassian.bamboo.deployments.versions.service.DeploymentVersionService;
-import com.atlassian.bamboo.spring.ComponentAccessor;
 import com.atlassian.bamboo.task.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,10 +37,9 @@ public class DeployTask implements TaskType
         buildLogger = taskContext.getBuildLogger();
 
         try {
+            final String deploymentProjectName = taskContext.getConfigurationMap().get("deploymentProject");
 
             final String environmentName = taskContext.getConfigurationMap().get("environment");
-
-            final String deploymentProjectName = taskContext.getConfigurationMap().get("deploymentProject");
 
             DeploymentProject deploymentProject = getMatchingDeploymentProject(deploymentProjectName);
 
@@ -53,9 +51,9 @@ public class DeployTask implements TaskType
 
             deploymentExecutionService.execute(deploymentContext);
 
-            waitForDeploymentToComplete(environment);
-
             buildLogger.addBuildLogEntry(deploymentVersion.getName() + " deployment to " + environment + " triggered.");
+
+            waitForDeploymentToComplete(environment);
 
             return TaskResultBuilder.create(taskContext).success().build();
 
