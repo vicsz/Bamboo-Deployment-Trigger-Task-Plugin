@@ -37,15 +37,15 @@ public class DeployTask implements TaskType
         buildLogger = taskContext.getBuildLogger();
 
         try {
-            final String deploymentProjectName = taskContext.getConfigurationMap().get("deploymentProject");
+            final long deploymentId = taskContext.getConfigurationMap().getAsLong("deploymentProjectId");
 
-            final String environmentName = taskContext.getConfigurationMap().get("environment");
+            final long environmentId = taskContext.getConfigurationMap().getAsLong("environmentId");
 
-            DeploymentProject deploymentProject = getMatchingDeploymentProject(deploymentProjectName);
+            DeploymentProject deploymentProject = deploymentProjectService.getDeploymentProject(deploymentId);
 
-            DeploymentVersion deploymentVersion = deploymentVersionService.getOrCreateDeploymentVersion(deploymentProject.getId(), taskContext.getBuildContext().getParentBuildContext().getPlanResultKey());
+            DeploymentVersion deploymentVersion = deploymentVersionService.getOrCreateDeploymentVersion(deploymentId, taskContext.getBuildContext().getParentBuildContext().getPlanResultKey());
 
-            Environment environment = getMatchingEnvironment(deploymentProject, environmentName);
+            Environment environment = getMatchingEnvironment(deploymentProject, environmentId);
 
             DeploymentContext deploymentContext = deploymentExecutionService.prepareDeploymentContext(environment, deploymentVersion, taskContext.getBuildContext().getTriggerReason());
 
@@ -68,26 +68,14 @@ public class DeployTask implements TaskType
 
     }
 
-    private DeploymentProject getMatchingDeploymentProject(String name){
-
-        List<DeploymentProject> allDeploymentProjects = deploymentProjectService.getAllDeploymentProjects();
-
-        for (DeploymentProject deploymentProject : allDeploymentProjects) {
-            if(deploymentProject.getName().equals(name))
-                return deploymentProject;
-        }
-
-        throw new RuntimeException("Unable to find deployment project: " + name);
-    }
-
-    private Environment getMatchingEnvironment(DeploymentProject deploymentProject, String name) {
+    private Environment getMatchingEnvironment(DeploymentProject deploymentProject, long id) {
 
         for (Environment environment : deploymentProject.getEnvironments()) {
-            if(environment.getName().equals(name))
+            if(environment.getId() == id)
                 return environment;
         }
 
-        throw new RuntimeException("Unable to find environment: " + name);
+        throw new RuntimeException("Unable to find environment with id: " + id);
     }
 
     private void waitForDeploymentToComplete(Environment environment) {

@@ -8,6 +8,7 @@ import com.atlassian.bamboo.task.AbstractTaskConfigurator;
 import com.atlassian.bamboo.task.TaskDefinition;
 import com.atlassian.bamboo.utils.error.ErrorCollection;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -21,30 +22,45 @@ public class DeployTaskConfigurator extends AbstractTaskConfigurator {
         this.deploymentProjectService = deploymentProjectService;
     }
 
-    public Map<String, String> generateTaskConfigMap(final ActionParametersMap params, final TaskDefinition previousTaskDefinition)
+    public Map<String, String> generateTaskConfigMap(@NotNull final ActionParametersMap params, final TaskDefinition previousTaskDefinition)
     {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
 
-        config.put("deploymentProject", params.getString("deploymentProject"));
-        config.put("environment", params.getString("environment"));
+        final String deploymentProjectName = params.getString("deploymentProjectName");
+        final String environmentName = params.getString("environmentName");
+
+        DeploymentProject deploymentProject = getMatchingDeploymentProject(deploymentProjectName);
+
+        Environment environment = getMatchingEnvironment(deploymentProject, environmentName);
+
+        config.put("deploymentProjectId", Long.toString(deploymentProject.getId()));
+        config.put("environmentId", Long.toString(environment.getId()));
 
         return config;
     }
 
-    public void populateContextForEdit(final Map<String, Object> context, final TaskDefinition taskDefinition)
+    public void populateContextForEdit(@NotNull final Map<String, Object> context, @NotNull final TaskDefinition taskDefinition)
     {
         super.populateContextForEdit(context, taskDefinition);
 
-        context.put("deploymentProject", taskDefinition.getConfiguration().get("deploymentProject"));
-        context.put("environment", taskDefinition.getConfiguration().get("environment"));
+        long deploymentProjectId = Long.parseLong(taskDefinition.getConfiguration().get("deploymentProjectId"));
+        long environmentId = Long.parseLong(taskDefinition.getConfiguration().get("environmentId"));
+
+        DeploymentProject deploymentProject = deploymentProjectService.getDeploymentProject(deploymentProjectId);
+
+        Environment environment = getMatchingEnvironment(deploymentProject, environmentId);
+
+        context.put("deploymentProjectName", deploymentProject.getName());
+        context.put("environmentName", environment.getName());
+
     }
 
-    public void validate(final ActionParametersMap params, final ErrorCollection errorCollection)
+    public void validate(@NotNull final ActionParametersMap params, @NotNull final ErrorCollection errorCollection)
     {
         super.validate(params, errorCollection);
 
-        final String deploymentProjectName = params.getString("deploymentProject");
-        final String environmentName = params.getString("environment");
+        final String deploymentProjectName = params.getString("deploymentProjectName");
+        final String environmentName = params.getString("environmentName");
 
         if (StringUtils.isEmpty(deploymentProjectName))
             errorCollection.addError("deploymentProject", "Deployment Project cannot be empty.");
@@ -83,6 +99,16 @@ public class DeployTaskConfigurator extends AbstractTaskConfigurator {
 
         for (Environment environment : deploymentProject.getEnvironments()) {
             if(environment.getName().equals(name))
+                return environment;
+        }
+
+        return null;
+    }
+
+    private Environment getMatchingEnvironment(DeploymentProject deploymentProject, long id) {
+
+        for (Environment environment : deploymentProject.getEnvironments()) {
+            if(environment.getId() == id)
                 return environment;
         }
 
