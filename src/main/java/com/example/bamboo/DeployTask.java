@@ -8,27 +8,29 @@ import com.atlassian.bamboo.deployments.projects.DeploymentProject;
 import com.atlassian.bamboo.deployments.projects.service.DeploymentProjectService;
 import com.atlassian.bamboo.deployments.versions.DeploymentVersion;
 import com.atlassian.bamboo.deployments.versions.service.DeploymentVersionService;
+import com.atlassian.bamboo.spring.ComponentAccessor;
 import com.atlassian.bamboo.task.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 
 public class DeployTask implements TaskType
 {
-    private final DeploymentVersionService deploymentVersionService;
+    private DeploymentVersionService deploymentVersionService;
 
-    private final DeploymentProjectService deploymentProjectService;
+    private DeploymentProjectService deploymentProjectService;
 
-    private final DeploymentExecutionService deploymentExecutionService;
+    private DeploymentExecutionService deploymentExecutionService;
 
     private BuildLogger buildLogger;
 
-    public DeployTask(DeploymentVersionService deploymentVersionService, DeploymentProjectService deploymentProjectService, DeploymentExecutionService deploymentExecutionService)
+    public DeployTask()
     {
+        this.deploymentProjectService = ComponentAccessor.DEPLOYMENT_PROJECT_SERVICE.get();
+        this.deploymentExecutionService = ComponentAccessor.DEPLOYMENT_EXECUTION_SERVICE.get();
+    }
+
+    public void setDeploymentVersionService(DeploymentVersionService deploymentVersionService) {
         this.deploymentVersionService = deploymentVersionService;
-        this.deploymentProjectService = deploymentProjectService;
-        this.deploymentExecutionService = deploymentExecutionService;
     }
 
     public TaskResult execute(@NotNull final TaskContext taskContext) throws TaskException
